@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>element demo</title>
+	<!-- 引入样式 -->
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+ <div id="app">
+    <el-button @click="visible = true">按钮</el-button><br>
+    起止日期
+ 	<!-- 开始时间 -->
+     <span class="demonstration">组件值：{{ value1 }}</span>
+    <el-date-picker
+      id="startTime"
+      v-model="value1"
+      type="date"
+      placeholder="开始日期" format="yyyy年MM月dd日" size="mini"  @change="getPickerDate">
+    </el-date-picker>
+
+  <!-- 结束时间 -->
+    <span class="demonstration">{{value2}}</span>
+    <el-date-picker
+      id="endTime"
+      v-model="value2"
+      type="date"
+      placeholder="结束日期" format="yyyy年MM月dd日" size="mini"  @change="getPickerDate">
+    </el-date-picker>
+    <el-date-picker
+      v-model="value3"
+      type="datetimerange"
+      range-separator="至"
+      @change="getPickerDate3"
+      start-placeholder="开始日期"
+      end-placeholder="结束日期">
+    </el-date-picker>
+</div>
+<!-- 先引入 Vue -->
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+ <script>
+    new Vue({
+      el: '#app',
+      data:{
+      	value1: '',
+      	value2: '',
+      	value3: ''
+      },
+      methods:{
+      	getPickerDate(){
+
+      	},
+      	getPickerDate3(){
+      		console.log(this.value1);
+      		if(!this.value1){
+				return;
+      		}
+      		console.log(this.value1.getFullYear());
+      		console.log(this.value1.getMonth()+1)
+      		console.log(this.value1.getDate())
+      		console.log(this.value2);
+      		console.log(this.value3);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

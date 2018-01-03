@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vue自定义事件 子组件向父组件传值</title>
+</head>
+<body>
+	<div id="app">
+	  <p>{{ total }}</p>
+	  <counter @increment="incrementTotal"></counter>
+	  <counter @increment="incrementTotal"></counter>
+	  <hr>
+	  <input v-model="msg">{{msg}}</span>
+	  <child :msg='msg' @send="getMsg"></child>
+	</div>
+	<script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+	<script>
+		Vue.component('counter', {
+		  template: '<button @click="incrementCounter">{{ counter }}</button>',
+		  data: function () {
+		    return {
+		      counter: 0
+		    }
+		  },
+		  methods: {
+		    incrementCounter: function () {
+		      this.counter += 1
+		      this.$emit('increment')
+	    	}
+  		  }
+		});
+		//子组件给父组件传值
+		Vue.component('child', {
+		   template: '<input @keyup="sendMsg" v-model="msg"></button>',
+		   props:['msg'],
+		   data: function () {
+		    return {
+		      
+		    }
+		  },
+	   	  methods: {
+		    sendMsg: function () {
+		      this.$emit('send',this.msg);
+	    	}
+  		  }
+		});
+
+		new Vue({
+		  el: '#app',
+		  data: {
+		    total: 0,
+		    msg:'hello'
+		  },
+		  methods: {
+		    incrementTotal: function () {
+		      this.total += 1
+		    },
+		    getMsg:function(msg){
+		    	this.msg = msg;
+		    }
+		  }
+		})
+	</script>
+</body>
+</html>

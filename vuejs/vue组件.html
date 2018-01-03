@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vue组件</title>
+</head>
+<body>
+<div id="app">
+	<p>{{tips}}</p>
+	<child msg="world"></child>
+</div>	
+	<script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+	<script>
+	 	//  Vue.component('child',{   //全局注册
+		 // 	// props:{
+		 // 	// 	msg:String
+		 // 	// },
+		 // 	props:['msg'],
+		 // 	template:'<span>{{msg}}</span>'
+		 // });
+        var Child = {
+        	props:['msg'],
+        	template: '<div>{{msg}}</div>'
+        }
+		new Vue({
+			el:'#app',
+			data:{
+				tips:'hello'
+			},
+			methods:{
+
+			},
+			components:{
+			   'child': Child
+			}
+		});
+
+	
+	</script>
+</body>
+</html>
