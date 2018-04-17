@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Promise异步编程--使用详解</title>
+</head>
+<body>
+	<script>
+		//resolve方法
+		//做饭
+		function cook(){
+			console.log('开始做饭');
+			var p = new Promise((resolve,reject)=>{
+				setTimeout(()=>{
+					console.log('做饭完毕');
+					resolve('鸡蛋炒饭');
+				},1000);
+			});
+			return p; 
+		}	
+		//吃饭
+		function eat(data){
+			console.log('开始吃饭'+data);
+			return new Promise((resolve,reject)=>{
+				setTimeout(()=>{
+					console.log('吃饭完毕');
+					resolve('一个碗和一双筷子');
+				},2000);
+			});
+		}
+		//洗碗
+		function wash(data){
+			console.log('开始洗碗'+data);
+			return new Promise((resolve,reject)=>{
+				setTimeout(()=>{
+					console.log('洗碗完毕');
+					resolve('干净的碗筷');
+				},2000);
+			});
+		}
+		// cook().then((data)=>{
+		// 	return eat(data);
+		// }).then((data)=>{
+		// 	return wash(data);
+		// }).then((data)=>{
+		// 	console.log(data)
+		// })
+		// cook().then(eat).then(wash).then((data)=>console.log(data));
+		console.log('---------------------分割线---------------------')
+		//做饭
+		// function cookR(){
+		// 	console.log('开始做饭');
+		// 	return new Promise((resolve,reject)=>{
+		// 		setTimeout(()=>{
+		// 			console.log('做饭失败!');
+		// 			reject('烧焦的米饭');
+		// 		},1000);
+		// 	});
+		// }
+
+		// function eatR(data){
+		// 	console.log('开始吃饭'+data);
+		// 	return new Promise((resolve,reject)=>{
+		// 		setTimeout(()=>{
+		// 			console.log('吃饭完毕');
+		// 			reject('一个碗和一双筷子');
+		// 		},2000);	
+		// 	});
+		// }
+
+		// cookR.then(eatR).then((data)=>{
+		// 	console.log(data+'没法吃');
+		// });
+		
+		// promise all
+		//切菜
+		function cutUp(){
+			console.log('开始切菜');
+			return new Promise((resolve,reject)=>{
+				console.log('切菜完毕');
+				resolve('切好的菜');
+			},1000);
+		}
+
+		//烧水
+		function boil(){
+			console.log('烧水');
+			return new Promise((resolve,reject)=>{
+				setTimeout(()=>{
+					console.log('烧水完毕');
+					resolve('烧好的水');
+				},1000)
+			});
+		}
+		//Promise的all方法提供了并行执行异步操作的能力，并且在所有异步操作执行完成后才执行回调，all会把所有异步操作的结果放进一个数组中传给then
+		
+		// Promise.all([cutUp(),boil()]).then((res)=>{
+		// 	console.log('准备工作完毕');
+		// 	console.log(res)
+		// })
+		//race用法同all race只要有一个异步操作执行完毕，就立刻执行then回调
+		Promise.race([cutUp(),boil()]).then((res)=>{
+			console.log('准备工作完毕');
+			console.log('res',res);
+		});
+		
+		//race使用场景 可以用race给某个异步请求设置超时时间 并且在超时后执行相应的操作
+		//请求某个图片资源
+		function  requestImg(){
+			return new Promise((resolve,reject)=>{
+				var img = new Image();
+				img.onload = ()=>{
+					resolve(img)
+				}
+				// img.src = 'xxxx';
+				img.src = 'orange.png';
+			});
+		}
+
+		//延时函数 用于给请求计时
+		function timeout(){
+			return new Promise((resolve,reject)=>{
+				setTimeout(()=>{
+					reject('图片请求超时');
+				},5000);
+			});
+		}
+		//requestImg()异步请求一张图片 timeout()是一个延时5秒的异步操作 
+		//如果5秒内图片请求成功便进入then方法 执行正常的流程
+		//如果5秒钟图片还未返回成功，那么则进入catch,报图片请求超时的信息
+		Promise.race([requestImg(),timeout()]).then((res)=>{
+			console.log('res',res);
+		}).catch((reason)=>{
+			console.log(reason);
+		});
+
+		//catch()两个作用
+		//1.可以和then的第二参数一样，用来指定reject的回调
+		// cook.then(eat).catch((data)=>{
+		// 	console.log(data+'没法吃');
+		// });
+		//2.当执行resolve的回调(也就是上面then的第一个参数)时，如果抛出异常了(代码出错了)，也不会报错卡死js,而是会进到catch方法中
+		//3. 通过添加多个catch，实现更加精准的异常捕获
+</script>
+</body>
+</html>
